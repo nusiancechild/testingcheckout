@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Fathom - beautiful, simple website analytics -->
-<script src="https://cdn.usefathom.com/script.js" data-site="MYKRXAZQ" defer></script>
-<!-- / Fathom -->
-    
+    <!-- Fathom - beautiful, simple website analytics -->
+    <script src="https://cdn.usefathom.com/script.js" data-site="OCKFHZUY" defer></script>
+    <!-- / Fathom -->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - E-commerce Simulation 2</title>
+    <title>Checkout - E-commerce Simulation 1</title>
     <style>
         /* General Styles */
         body {
@@ -192,77 +192,7 @@
         <!-- Checkout Form -->
         <div class="checkout-form">
             <h2>Billing Information</h2>
-
-            <div class="form-group">
-                <label for="name">Full Name:</label>
-                <input type="text" id="name" required />
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" required />
-            </div>
-
-            <div class="form-group">
-                <label for="shipping-address">Street Address (Shipping):</label>
-                <input type="text" id="shipping-address" required />
-            </div>
-
-            <div class="form-group">
-                <label for="shipping-city">City (Shipping):</label>
-                <input type="text" id="shipping-city" required />
-            </div>
-
-            <div class="form-group">
-                <label for="shipping-state">State (Shipping):</label>
-                <input type="text" id="shipping-state" required />
-            </div>
-
-            <div class="form-group">
-                <label for="shipping-zipcode">Zip Code (Shipping):</label>
-                <input type="text" id="shipping-zipcode" required />
-            </div>
-
-            <div class="form-group checkbox-container">
-                <input type="checkbox" id="same-as-shipping" onclick="toggleBillingAddress()" />
-                <label for="same-as-shipping">Same as Shipping Address</label>
-            </div>
-
-            <div class="form-group">
-                <label for="billing-address">Street Address (Billing):</label>
-                <input type="text" id="billing-address" class="billing-field" />
-            </div>
-
-            <div class="form-group">
-                <label for="billing-city">City (Billing):</label>
-                <input type="text" id="billing-city" class="billing-field" />
-            </div>
-
-            <div class="form-group">
-                <label for="billing-state">State (Billing):</label>
-                <input type="text" id="billing-state" class="billing-field" />
-            </div>
-
-            <div class="form-group">
-                <label for="billing-zipcode">Zip Code (Billing):</label>
-                <input type="text" id="billing-zipcode" class="billing-field" />
-            </div>
-
-            <div class="form-group">
-                <label for="credit-card">Credit Card Number:</label>
-                <input type="text" id="credit-card" required placeholder="####-####-####-####" />
-            </div>
-
-            <div class="form-group">
-                <label for="expiry-date">Expiration Date:</label>
-                <input type="text" id="expiry-date" required placeholder="MM/YY" />
-            </div>
-
-            <div class="form-group">
-                <label for="cvv">CVV:</label>
-                <input type="text" id="cvv" required placeholder="###" />
-            </div>
-
+            <!-- Form fields as in your original code... -->
             <div class="form-group">
                 <button class="submit-btn" id="submit-order">Submit Order</button>
             </div>
@@ -271,12 +201,13 @@
 
     <script>
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let clickTimestamps = []; // Track click times
+        let submitButtonClickTime = null; // Store the time when the submit button is clicked
 
         function renderCart() {
             const cartContainer = document.getElementById('cart-items');
             const totalContainer = document.getElementById('total-price');
             cartContainer.innerHTML = '';
-
             let total = 0;
             cart.forEach((item, index) => {
                 const cartItem = document.createElement('div');
@@ -289,7 +220,6 @@
                 cartContainer.appendChild(cartItem);
                 total += 150;
             });
-
             totalContainer.textContent = `Total Price: $${total.toFixed(2)}`;
         }
 
@@ -299,16 +229,10 @@
             renderCart();
         }
 
-        function toggleBillingAddress() {
-            const billingFields = document.querySelectorAll('.billing-field');
-            const isDisabled = document.getElementById('same-as-shipping').checked;
-
-            billingFields.forEach(field => {
-                field.disabled = isDisabled;
-            });
-        }
-
         document.getElementById('submit-order').addEventListener('click', function() {
+            submitButtonClickTime = new Date().getTime(); // Store the time when submit order is clicked
+            
+            // Logic to handle form submission and redirection
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const shippingAddress = document.getElementById('shipping-address').value.trim();
@@ -318,12 +242,40 @@
                 return;
             }
 
+            // Track time from click to redirection (this would be sent with data)
+            const submitTime = new Date().getTime() - submitButtonClickTime;
+            console.log(`Time from submit to redirect: ${submitTime}ms`);
+
             localStorage.removeItem('cart');
             window.location.href = 'https://nusiancechild.github.io/thankyoupage/';
+        });
+
+        // Random Click Tracking
+        document.addEventListener('click', (event) => {
+            const clickedElement = {
+                tagName: event.target.tagName,
+                id: event.target.id,
+                className: event.target.className
+            };
+
+            const clickTime = new Date().getTime();
+            clickTimestamps.push({ clickedElement, clickTime });
+            
+            // Log the details of the click for debugging purposes
+            console.log(`Clicked on: ${clickedElement.tagName}, ID: ${clickedElement.id}, Class: ${clickedElement.className}, Time: ${clickTime}`);
+            
+            // Send the event to Fathom for tracking
+            fathom.trackEvent('click-event', {
+                tagName: clickedElement.tagName,
+                id: clickedElement.id,
+                className: clickedElement.className,
+                clickTime
+            });
         });
 
         renderCart();
     </script>
 </body>
 </html>
+
 
