@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <!-- Fathom - beautiful, simple website analytics -->
     <script src="https://cdn.usefathom.com/script.js" data-site="ZUXPBTKX" defer></script>
@@ -7,7 +9,165 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - E-commerce Simulation</title>
     <style>
-        /* Styles (unchanged for brevity) */
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        
+        h1 {
+            background-color: #001f3f; /* Navy blue */
+            color: white;
+            font-family: 'Verdana', sans-serif;
+            padding: 20px;
+            margin: 0;
+            text-align: center;
+            letter-spacing: 1.5px;
+        }
+
+        .home-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 35px;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            z-index: 10;
+        }
+
+        .home-icon:hover {
+            color: #004080;
+        }
+
+        .checkout-container {
+            display: flex;
+            max-width: 1000px;
+            margin: 50px auto;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .checkout-container .cart-details {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .cart-details h2 {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .cart-item button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .cart-item button:hover {
+            background-color: #e60000;
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .checkout-form {
+            flex: 1;
+            padding: 20px;
+            background-color: #f4f4f9;
+            border-left: 2px solid #ddd;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input[type="text"], input[type="number"], input[type="email"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .submit-btn {
+            background-color: #001f3f;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #004080;
+        }
+
+        .address-group input:disabled {
+            background-color: #ddd;
+        }
+
+        .go-back-btn {
+            background-color: #ffffff;
+            color: #001f3f;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            width: fit-content;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+
+        .go-back-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .go-back-btn i {
+            margin-right: 10px;
+        }
+
+        .go-back-btn:hover i {
+            color: #004080;
+        }
+
+        .cart-details {
+            position: relative;
+        }
     </style>
 </head>
 <body>
@@ -32,6 +192,7 @@
         <!-- Checkout Form -->
         <div class="checkout-form">
             <h2>Billing Information</h2>
+
             <div class="form-group">
                 <label for="name">Full Name:</label>
                 <input type="text" id="name" required />
@@ -39,7 +200,7 @@
 
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="text" id="email" required />
+                <input type="email" id="email" required />
             </div>
 
             <div class="form-group">
@@ -62,13 +223,11 @@
                 <input type="text" id="shipping-zipcode" required />
             </div>
 
-            <!-- Checkbox for Billing Address -->
             <div class="form-group checkbox-container">
                 <input type="checkbox" id="same-as-shipping" onclick="toggleBillingAddress()" />
                 <label for="same-as-shipping">Same as Shipping Address</label>
             </div>
 
-            <!-- Billing Address Fields -->
             <div class="form-group">
                 <label for="billing-address">Street Address (Billing):</label>
                 <input type="text" id="billing-address" class="billing-field" />
@@ -89,7 +248,6 @@
                 <input type="text" id="billing-zipcode" class="billing-field" />
             </div>
 
-            <!-- Credit Card Information -->
             <div class="form-group">
                 <label for="credit-card">Credit Card Number:</label>
                 <input type="text" id="credit-card" required placeholder="####-####-####-####" />
@@ -112,28 +270,6 @@
     </div>
 
     <script>
-        document.getElementById('submit-order').addEventListener('click', (event) => {
-            event.preventDefault(); // Prevent form submission if inside a form tag
-
-            // Collect form data for validation or processing
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const shippingAddress = document.getElementById('shipping-address').value;
-
-            // Validate inputs
-            if (!name || !email || !shippingAddress) {
-                alert('Please fill in all required fields.');
-                return;
-            }
-
-            // Clear cart (optional, if order completion should reset the cart)
-            localStorage.removeItem('cart');
-
-            // Redirect to the thank-you page
-            window.location.href = 'https://nusiancechild.github.io/thankyoupage/';
-        });
-
-        // Render cart and manage billing address toggle (unchanged for brevity)
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
         function renderCart() {
@@ -154,7 +290,7 @@
                 total += 150;
             });
 
-            totalContainer.textContent = `Total: $${total}.00`;
+            totalContainer.textContent = `Total Price: $${total.toFixed(2)}`;
         }
 
         function removeItem(index) {
@@ -164,16 +300,30 @@
         }
 
         function toggleBillingAddress() {
-            const isChecked = document.getElementById('same-as-shipping').checked;
             const billingFields = document.querySelectorAll('.billing-field');
+            const isDisabled = document.getElementById('same-as-shipping').checked;
+
             billingFields.forEach(field => {
-                field.disabled = isChecked;
+                field.disabled = isDisabled;
             });
         }
 
-        window.onload = () => {
-            renderCart();
-        };
+        document.getElementById('submit-order').addEventListener('click', function() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const shippingAddress = document.getElementById('shipping-address').value.trim();
+
+            if (!name || !email || !shippingAddress) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            localStorage.removeItem('cart');
+            window.location.href = 'https://nusiancechild.github.io/thankyoupage/';
+        });
+
+        renderCart();
     </script>
 </body>
+</html>
 
